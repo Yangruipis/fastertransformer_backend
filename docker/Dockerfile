@@ -56,12 +56,17 @@ RUN pip3 install -i https://mirrors.ustc.edu.cn/pypi/web/simple --no-cache-dir t
 #     rm -rf /var/lib/apt/lists/*
 
 # backend build
-ADD . /workspace/build/fastertransformer_backend
-RUN mkdir -p /workspace/build/fastertransformer_backend/build
+WORKDIR /workspace/build/fastertransformer_backend/
+
+COPY all_models all_models
+COPY cmake cmake
+COPY docs docs
+COPY src src
+COPY tools tools
+COPY CMakeLists.txt CMakeLists.txt
 
 WORKDIR /workspace/build/fastertransformer_backend/build
 ARG FORCE_BACKEND_REBUILD=0
-ARG SM=86
 RUN https_proxy=http://172.18.178.13:3129 cmake \
       -D CMAKE_EXPORT_COMPILE_COMMANDS=1 \
       -D CMAKE_BUILD_TYPE=Release \
